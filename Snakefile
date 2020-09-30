@@ -25,6 +25,7 @@ mrna = 'data/ref/GCF_000001405.39_GRCh38.p13_rna.fna'
 
 # containers
 bbmap = 'shub://TomHarrop/seq-utils:bbmap_38.86'
+bioconductor = 'shub://TomHarrop/r-containers:bioconductor_3.11'
 gffread = 'shub://TomHarrop/assembly-utils:gffread_0.12.3'
 salmon = 'docker://combinelab/salmon:1.3.0'
 salmontools = 'shub://TomHarrop/align-utils:salmontools_23eac84'
@@ -36,10 +37,22 @@ samtools = 'shub://TomHarrop/align-utils:samtools_1.10'
 
 rule all:
     input:
-        expand('output/020_salmon/{sample}/quant.sf',
-               sample=pep.sample_table['sample_name']),
-        # 'output/000_ref/gentrome.fa'
+        'output/030_deseq/dds.Rds'
 
+# DE analysis
+rule generate_deseq_object:
+    input:
+        quant_files = expand('output/020_salmon/{sample}/quant.sf',
+                             sample=pep.sample_table['sample_name']),
+        gff = gff
+    output:
+        'output/030_deseq/dds.Rds'
+    log:
+        'output/logs/generate_deseq_object.log'
+    singularity:
+        bioconductor
+    script:
+        'src/generate_deseq_object.R'
 
 # quantify
 rule salmon:
