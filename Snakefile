@@ -42,10 +42,10 @@ rule all:
 # DE analysis
 rule deseq_contrasts:
     input:
-        dds = 'output/030_deseq/dds.Rds'
+        dds = 'output/030_deseq/dds.Rds',
         factor_data = 'data/factor_data.csv'
     output:
-        counts = 'output/030_deseq/norm_counts.csv'
+        counts = 'output/030_deseq/norm_counts.csv',
         wald_results = 'output/030_deseq/wald_results.treatment.csv'
     params:
         lfc_threshold = 0.5849625,     # log(1.5, 2)
@@ -58,7 +58,7 @@ rule deseq_contrasts:
         bioconductor
     script:
         'src/deseq_contrasts.R'
-        
+
 
 
 rule generate_deseq_object:
