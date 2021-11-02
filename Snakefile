@@ -37,9 +37,30 @@ samtools = 'shub://TomHarrop/align-utils:samtools_1.10'
 
 rule all:
     input:
-        'output/030_deseq/dds.Rds'
+        'output/030_deseq/wald_results.treatment.csv'
 
 # DE analysis
+rule deseq_contrasts:
+    input:
+        dds = 'output/030_deseq/dds.Rds'
+        factor_data = 'data/factor_data.csv'
+    output:
+        counts = 'output/030_deseq/norm_counts.csv'
+        wald_results = 'output/030_deseq/wald_results.treatment.csv'
+    params:
+        lfc_threshold = 0.5849625,     # log(1.5, 2)
+        alpha = 0.05
+    log:
+        'output/logs/deseq_contrasts.log'
+    threads:
+        workflow.cores
+    singularity:
+        bioconductor
+    script:
+        'src/deseq_contrasts.R'
+        
+
+
 rule generate_deseq_object:
     input:
         quant_files = expand('output/020_salmon/{sample}/quant.sf',
