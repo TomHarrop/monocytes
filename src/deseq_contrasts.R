@@ -54,6 +54,10 @@ contrasts <- list(
     c("Treatment", "Untreated", "Lysed"),
     c("Treatment", "Lysed", "Intact"))
 
+contrasts <- c(contrasts,
+               lapply(contrasts, function(x) x[c(1, 3, 2)]))
+
+
 # extract results
 all_res <- lapply(
     contrasts, function(x)
@@ -77,6 +81,3 @@ fwrite(norm_counts, snakemake@output[["counts"]])
 
 # log
 sessionInfo()
-
-
-    
