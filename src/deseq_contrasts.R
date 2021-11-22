@@ -75,9 +75,16 @@ setorder(res_dt, gene, contrast)
 norm_counts <- data.table(as.data.frame(counts(dds, normalized = TRUE)),
                        keep.rownames = "gene")
 
+# subset counts by comparison
+contrast_gene_lists <- lapply(all_res, function(x)
+    norm_counts[gene %in% data.table(x)[padj < alpha, unique(row)]])
+contrast_genes <- rbindlist(contrast_gene_lists, idcol = "contrast")
+setorder(contrast_genes, contrast, gene)
+
 # write output
 fwrite(res_dt, snakemake@output[["wald_results"]])
 fwrite(norm_counts, snakemake@output[["counts"]])
+fwrite(contrast_genes, snakemake@output[["contrast_genes"]])
 
 # log
 sessionInfo()

@@ -46,7 +46,8 @@ rule deseq_contrasts:
         factor_data = 'data/factor_data.csv'
     output:
         counts = 'output/030_deseq/norm_counts.csv',
-        wald_results = 'output/030_deseq/wald_results.treatment.csv'
+        wald_results = 'output/030_deseq/wald_results.treatment.csv',
+        contrast_genes = 'output/030_deseq/norm_counts.by_contrast.csv'
     params:
         lfc_threshold = 0.5849625,     # log(1.5, 2)
         alpha = 0.05
@@ -58,7 +59,6 @@ rule deseq_contrasts:
         bioconductor
     script:
         'src/deseq_contrasts.R'
-
 
 
 rule generate_deseq_object:
